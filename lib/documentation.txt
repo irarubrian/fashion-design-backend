@@ -1,0 +1,57 @@
+# ---FASHION && CLOTHING SHOP ---
+
+>>is an online fashion web app that allow user to browse stylish clothing,
+>>view product details, and shop by adding item to a viatual cart,
+>>It will designed to be modern , responsive and user friendly
+
+#---FEATURES---
+
+>>View all available fashion products
+>>FIlter product by categories E.g Men, Woman, Children
+>>Add or remove product from the cart
+>>Toggle between light and dackmode
+>>Fully responsive for mobile, tablet, and desktop
+
+#---TECH STACK---
+
+**FRONTED**: react
+**BACKEND**:Flask
+**DATABASE**:sqlite/flask sqlalchemy
+**AUTENDICATION**:email and password
+
+
+#---Authentication & Security---
+(1)JWT Authentication
+(2)FLask_Login: Session based user Authentication
+(3)Flask bcrypt: password hashing
+(4)Flask-CORS:To handle cross-origin resorce sharing
+
+#---Admin && Dashboard tools---
+(1)Allow admin to view and manage products, categories, and users
+(2)Admin can add, update, or delete product items
+(3)Admin can view customer orders and their order history
+(4)Access to the dashboard is restricted using JWT tokens
+(5)Admin dashboard built using React and secured via protected routes
+(6)Only authenticated admins can access or perform dashboard actions
+(7)Simple analytics: show number of users, orders, and products
+(8)CRUD operations for inventory and order management
+(9)Admin authentication uses the same secure login system (JWT + bcrypt)
+
+#---Order Management System---
+
+(1)Users can place orders after adding items to their cart
+(2)Each order includes product info, quantity, price, and timestamp
+(3)Order summary displayed after checkout
+(4)User can view their previous order history
+(5)Admin can view and manage all orders from the dashboard
+(6)Order status can be updated (e.g., pending, shipped, delivered)
+(7)Each order is linked to a registered user via the database
+
+#---User Profile Features---
+
+(1)Users can register, log in, and log out securely
+(2)Each user has a profile with email and order history
+(3)Users can update their profile information
+(4)Profile page displays past orders, date, and status
+(5)User authentication handled with JWT or Flask-Login
+(6)Profile page is protected — only accessible when logged in
