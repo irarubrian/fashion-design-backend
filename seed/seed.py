@@ -12,7 +12,7 @@ with app.app_context():
     # ------------------- USERS -------------------
     admin = User(
         username="admin",
-        email="hamdiaden2424@gmail.com",
+        email="dee@example.com",
         password_hash=generate_password_hash("admin123"),
         role="admin"
     )
