@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
+from routes.mpesa import mpesa_bp
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -21,6 +22,8 @@ def create_app():
     # Register Blueprints
     from routes.routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
+    app.register_blueprint(mpesa_bp)
+
 
     return app
 

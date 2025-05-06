@@ -1,5 +1,6 @@
 from app import app
-from models import db, User, Category, Product, Address, CartItem, Order, Invoice
+from models.models import db, User, Category, Product, Address, CartItem, Order, Invoice
+
 from werkzeug.security import generate_password_hash
 from datetime import datetime
 from app import app, db
@@ -11,11 +12,12 @@ with app.app_context():
 
     # ------------------- USERS -------------------
     admin = User(
-        username="admin",
-        email="dee@example.com",
-        password_hash=generate_password_hash("admin123"),
-        role="admin"
-    )
+    username="admin",
+    email="admin@example.com",  # ✅ unique email now
+    password_hash=generate_password_hash("admin123"),
+    role="admin"
+)
+
 
     customer = User(
         username="dee",
@@ -75,9 +77,7 @@ with app.app_context():
         user_id=customer.id,
         street="123 Main St",
         city="Nairobi",
-        state="Nairobi",
-        zip_code="00100",
-        country="Kenya"
+        
     )
     db.session.add(address)
     db.session.commit()
