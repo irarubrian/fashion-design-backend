@@ -89,3 +89,12 @@ POST /checkout
 
 Body: { "user_id": 2 }
 
+testing mpesa : 
+method post 
+http://localhost:5000/api/pay
+
+{
+  "phone": "2547XXXXXXXX",
+  "amount": 100
+}
+
