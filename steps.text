@@ -98,3 +98,13 @@ http://localhost:5000/api/pay
   "amount": 100
 }
 
+🧪 : Test Image Upload via Postman
+Method: POST
+
+URL: http://localhost:5000/api/upload-image
+
+Body: form-data
+
+Key: file
+
+Value: (choose an image file)

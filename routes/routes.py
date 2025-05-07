@@ -6,6 +6,7 @@ from app import db
 
 main = Blueprint("main", __name__)
 
+
 @main.route("/register", methods=["POST"])
 def register():
     data = request.json
