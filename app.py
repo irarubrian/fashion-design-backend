@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from config import Config
 from routes.mpesa import mpesa_bp
+from routes.image_upload import image_upload_bp
 
 # Initialize extensions
 db = SQLAlchemy()
@@ -23,6 +24,8 @@ def create_app():
     from routes.routes import main as main_blueprint
     app.register_blueprint(main_blueprint)
     app.register_blueprint(mpesa_bp)
+    app.register_blueprint(image_upload_bp)
+
 
 
     return app
