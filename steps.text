@@ -1,0 +1,100 @@
+input examples for testing data
+
+🔐 Admin Login Credentials (for testing)
+Use these credentials in Postman to log in as the admin:
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+
+
+Use this with the POST /login endpoint:
+
+URL: http://localhost:5000/login
+
+Method: POST
+
+Body (JSON):
+
+
+Register
+Method post
+http://localhost:5000/register
+
+Body: { "username": "dee", "email": "dee@example.com", "password": "password" }
+
+Login
+
+POST /login
+
+Body: { "email": "dee@example.com", "password": "password" }
+
+📦 Products (Admin only)
+Get All Products
+
+GET /products
+
+Create Product
+
+POST /admin/products
+
+Body:
+
+{
+  "name": "New Shirt",
+  "description": "Stylish cotton shirt",
+  "price": 25.99,
+  "stock": 30,
+  "size": "L",
+  "color": "Black",
+  "image_url": "https://example.com/shirt.jpg",
+  "category_id": 1
+}
+Update Product
+
+PUT /admin/products/<id>
+
+Delete Product
+
+DELETE /admin/products/<id>
+
+🗂️ Categories
+Get Categories
+
+GET /categories
+
+🛒 Cart Items
+View Cart
+
+GET /cart/<user_id>
+
+Add to Cart
+
+POST /cart/add
+
+Body: { "user_id": 2, "product_id": 1, "quantity": 2 }
+
+(Optional) Add a route:
+
+DELETE /cart/remove/<item_id> for removing items
+
+🧾 Orders & Checkout
+Get Orders
+
+GET /orders/<user_id>
+
+Checkout
+
+POST /checkout
+
+Body: { "user_id": 2 }
+
+testing mpesa : 
+method post 
+http://localhost:5000/api/pay
+
+{
+  "phone": "2547XXXXXXXX",
+  "amount": 100
+}
+
