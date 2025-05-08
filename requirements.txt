@@ -10,7 +10,9 @@ configobj==5.0.8
 cryptography==41.0.7
 distlib==0.3.8
 filelock==3.13.1
+Flask==2.0.1  # Add Flask if not already included
 greenlet==3.0.3
+gunicorn==21.2.0  # Add this line
 httplib2==0.20.4
 idna==3.6
 iniconfig==1.1.1
