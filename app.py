@@ -42,10 +42,18 @@ with app.app_context():
 
 
 from routes.auth import auth_bp
-from routes.mpesa import mpesa_bp  
+from routes.mpesa import mpesa_bp
+from routes.routes import main as main_bp  # Import the main blueprint
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(mpesa_bp, url_prefix='/mpesa/api') 
+app.register_blueprint(mpesa_bp, url_prefix='/mpesa/api')
+app.register_blueprint(main_bp, url_prefix='/api')  # Register the main blueprint
+
+
+# Add a root route handler
+@app.route('/', methods=['GET'])
+def index():
+    return jsonify({'message': 'Fashion Design API is running'})
 
 
 @app.route('/', defaults={'path': ''}, methods=['OPTIONS'])

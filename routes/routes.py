@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 from models.models import User, Product, Category, CartItem, Order, Invoice, Address
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-from app import db      
+from extensions import db  # Updated to use extensions.db instead of app.db
 
 main = Blueprint("main", __name__)
 
