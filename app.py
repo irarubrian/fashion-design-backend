@@ -42,7 +42,10 @@ CORS(app,
      resources={r"/*": {"origins": [
          "http://localhost:5173", 
          "https://fashion-design-fronted.vercel.app",
-         "https://fashion-design-fronted-git-main-ythaka1s-projects.vercel.app"
+         "https://fashion-design-fronted-git-main-ythaka1s-projects.vercel.app",
+         "https://fashion-design-frontend-three.vercel.app",  # Add your new frontend domain
+         # For maximum compatibility, you can use a wildcard for all subdomains
+         "https://*.vercel.app"
      ]}},
      supports_credentials=True,
      expose_headers=["Content-Type", "Authorization"])
