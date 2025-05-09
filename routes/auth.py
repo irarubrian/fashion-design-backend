@@ -12,11 +12,16 @@ logger = logging.getLogger(__name__)
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # Add supports_credentials=True
 def register():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
@@ -80,11 +85,16 @@ def register():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/login', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # Add supports_credentials=True
 def login():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
@@ -133,11 +143,16 @@ def login():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/admin/login', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # Add supports_credentials=True
 def admin_login():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
@@ -190,11 +205,16 @@ def admin_login():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/logout', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # Add supports_credentials=True
 def logout():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
@@ -210,11 +230,16 @@ def logout():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/check', methods=['GET', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # Add supports_credentials=True
 def check_auth():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
@@ -246,11 +271,16 @@ def check_auth():
 
 
 @auth_bp.route('/create-admin', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # Add supports_credentials=True
 def create_admin():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:

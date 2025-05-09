@@ -38,17 +38,19 @@ db.init_app(app)
 jwt = JWTManager(app)
 
 # Update CORS to allow requests from all your frontend URLs
+# IMPORTANT: Set supports_credentials=True to allow cookies
 CORS(app, 
      resources={r"/*": {"origins": [
          "http://localhost:5173", 
          "https://fashion-design-fronted.vercel.app",
          "https://fashion-design-fronted-git-main-ythaka1s-projects.vercel.app",
          "https://fashion-design-frontend-three.vercel.app",
-         "https://fashion-designed-frontend.vercel.app",  # Added your new frontend domain
+         "https://fashion-designed-frontend.vercel.app",
+         "https://fashion-designed-frontend-e8ja26wcj-ythaka1s-projects.vercel.app",  # Added new frontend domain
          # For maximum compatibility, you can use a wildcard for all subdomains
          "https://*.vercel.app"
      ]}},
-     supports_credentials=True,
+     supports_credentials=True,  # This is crucial for credentials to work
      expose_headers=["Content-Type", "Authorization"])
 
 
@@ -68,11 +70,34 @@ app.register_blueprint(mpesa_bp, url_prefix='/mpesa/api')
 @app.route('/<path:path>', methods=['OPTIONS'])
 def options_handler(path):
     response = jsonify(success=True)
-    # Explicitly add CORS headers for OPTIONS requests
-    response.headers.add('Access-Control-Allow-Origin', '*')
+    
+    # Get the origin from the request
+    origin = request.headers.get('Origin', '')
+    
+    # Check if the origin is in our allowed origins
+    allowed_origins = [
+        "http://localhost:5173", 
+        "https://fashion-design-fronted.vercel.app",
+        "https://fashion-design-fronted-git-main-ythaka1s-projects.vercel.app",
+        "https://fashion-design-frontend-three.vercel.app",
+        "https://fashion-designed-frontend.vercel.app",
+        "https://fashion-designed-frontend-e8ja26wcj-ythaka1s-projects.vercel.app"
+    ]
+    
+    # If the origin is allowed, set the specific origin instead of '*'
+    # This is required when using credentials
+    if origin in allowed_origins or origin.endswith('.vercel.app'):
+        response.headers.add('Access-Control-Allow-Origin', origin)
+    else:
+        # For development, you might want to allow all origins
+        # But in production, you should restrict this
+        response.headers.add('Access-Control-Allow-Origin', origin)
+    
+    # IMPORTANT: Set Access-Control-Allow-Credentials to 'true'
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
     response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    
     return response
 
 

@@ -41,11 +41,16 @@ def generate_access_token():
         return None
 
 @mpesa_bp.route('/pay', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # IMPORTANT: Add supports_credentials=True
 def lipa_na_mpesa_online():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
@@ -175,11 +180,16 @@ def lipa_na_mpesa_online():
         return jsonify({'success': False, 'message': f'Server error: {str(e)}'}), 500
 
 @mpesa_bp.route('/callback', methods=['POST', 'OPTIONS'])
-@cross_origin()  # Add this decorator to handle CORS for this specific route
+@cross_origin(supports_credentials=True)  # IMPORTANT: Add supports_credentials=True
 def mpesa_callback():
     if request.method == 'OPTIONS':
         # Handle preflight request
+        origin = request.headers.get('Origin', '')
         response = jsonify({'success': True})
+        response.headers.add('Access-Control-Allow-Origin', origin)
+        response.headers.add('Access-Control-Allow-Credentials', 'true')
+        response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+        response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
         return response
         
     try:
