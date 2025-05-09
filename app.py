@@ -6,65 +6,74 @@ import traceback
 import os
 from datetime import timedelta
 from werkzeug.security import generate_password_hash
-from extensions import db
+from flask_jwt_extended import JWTManager
 
-# -------------------- Logging Setup --------------------
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# -------------------- App Setup --------------------
+
 app = Flask(__name__)
 
-# Database Configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Secret Key
+# Secret key for sessions and JWT
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or 'your-super-secret-key-change-this'
+app.config['JWT_SECRET_KEY'] = os.environ.get('JWT_SECRET_KEY') or 'jwt-super-secret-key-change-this'
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(days=7)
 
-# Session Configuration
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = True  # Set to True for production with HTTPS
+# Session configuration
+app.config['SESSION_COOKIE_SAMESITE'] = 'None' 
+app.config['SESSION_COOKIE_SECURE'] = True  # Set to True for HTTPS
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=7)
 
-# Initialize DB
+
+from extensions import db
 db.init_app(app)
 
-# -------------------- CORS Setup --------------------
-CORS(app,
-     supports_credentials=True,
-     resources={r"/api/*": {"origins": [
-         "http://localhost:3000",
-         "https://fashion-design-frontend.vercel.app",  # replace with actual domain
+# Initialize JWT
+jwt = JWTManager(app)
+
+# Update CORS to allow requests from all your frontend URLs
+CORS(app, 
+     resources={r"/*": {"origins": [
+         "http://localhost:5173", 
+         "https://fashion-design-fronted.vercel.app",
+         "https://fashion-design-fronted-git-main-ythaka1s-projects.vercel.app"
      ]}},
+     supports_credentials=True,
      expose_headers=["Content-Type", "Authorization"])
 
-# -------------------- Models --------------------
+
 with app.app_context():
     from models.models import User, Category, Product, CartItem, Order, Invoice, Address
 
-# -------------------- Routes --------------------
+
 from routes.auth import auth_bp
-from routes.mpesa import mpesa_bp
-from routes.routes import main as main_bp
+from routes.mpesa import mpesa_bp  
 
 app.register_blueprint(auth_bp, url_prefix='/api/auth')
-app.register_blueprint(mpesa_bp, url_prefix='/mpesa/api')
-app.register_blueprint(main_bp, url_prefix='/api')
+app.register_blueprint(mpesa_bp, url_prefix='/mpesa/api') 
 
-# -------------------- Health Check Routes --------------------
-@app.route('/', methods=['GET'])
-def index():
-    return jsonify({'message': 'Fashion Design API is running'})
+
+@app.route('/', defaults={'path': ''}, methods=['OPTIONS'])
+@app.route('/<path:path>', methods=['OPTIONS'])
+def options_handler(path):
+    return jsonify(success=True)
+
 
 @app.route('/api/test', methods=['GET'])
 def test():
     return jsonify({'message': 'API is working'})
 
+
 @app.route('/api/test-db', methods=['GET'])
 def test_db():
     try:
+        
         result = db.session.execute('SELECT 1').fetchone()
         if result:
             return jsonify({'success': True, 'message': 'Database connection successful'})
@@ -74,34 +83,31 @@ def test_db():
         logger.error(f"Database error: {str(e)}")
         return jsonify({'success': False, 'message': f'Database error: {str(e)}'})
 
-@app.route('/', defaults={'path': ''}, methods=['OPTIONS'])
-@app.route('/<path:path>', methods=['OPTIONS'])
-def options_handler(path):
-    return jsonify(success=True)
 
-# -------------------- Global Error Handler --------------------
 @app.errorhandler(Exception)
 def handle_error(e):
     logger.error(f"Unhandled exception: {str(e)}")
     logger.error(traceback.format_exc())
-    return jsonify({'success': False, 'message': 'Internal server error'}), 500
+    response = jsonify({'success': False, 'message': 'Internal server error'})
+    response.status_code = 500
+    return response
 
-# -------------------- Run --------------------
 if __name__ == '__main__':
+    
     with app.app_context():
         db.create_all()
-
-        # Create default admin if not exists
+        
+        
         admin = User.query.filter_by(email='admin@example.com').first()
         if not admin:
             admin = User(
                 username='Admin',
                 email='admin@example.com',
-                password_hash=generate_password_hash('admin123'),
+                password_hash=generate_password_hash('admin123'),  
                 role='admin'
             )
             db.session.add(admin)
             db.session.commit()
             logger.info("Admin user created")
-
+    
     app.run(debug=True)
