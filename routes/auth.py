@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db
 import logging
 import traceback
+from flask_cors import cross_origin
 
 
 logging.basicConfig(level=logging.INFO)
@@ -11,9 +12,12 @@ logger = logging.getLogger(__name__)
 auth_bp = Blueprint('auth', __name__)
 
 @auth_bp.route('/register', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def register():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
         
@@ -76,9 +80,12 @@ def register():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/login', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def login():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
         
@@ -126,9 +133,12 @@ def login():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/admin/login', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def admin_login():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
         
@@ -180,9 +190,12 @@ def admin_login():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/logout', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def logout():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
         user_id = session.get('user_id')
@@ -197,9 +210,12 @@ def logout():
         return jsonify({'success': False, 'message': 'Server error'}), 500
 
 @auth_bp.route('/check', methods=['GET', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def check_auth():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
         
@@ -230,9 +246,12 @@ def check_auth():
 
 
 @auth_bp.route('/create-admin', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def create_admin():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
        

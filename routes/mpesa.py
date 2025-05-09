@@ -5,6 +5,7 @@ from datetime import datetime
 import logging
 import traceback
 from extensions import db
+from flask_cors import cross_origin
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -40,9 +41,12 @@ def generate_access_token():
         return None
 
 @mpesa_bp.route('/pay', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
 def lipa_na_mpesa_online():
     if request.method == 'OPTIONS':
-        return jsonify({'success': True})
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
         
     try:
         # Get the request data
@@ -169,3 +173,59 @@ def lipa_na_mpesa_online():
         logger.error(f"Unexpected error in M-PESA payment: {str(e)}")
         logger.error(traceback.format_exc())
         return jsonify({'success': False, 'message': f'Server error: {str(e)}'}), 500
+
+@mpesa_bp.route('/callback', methods=['POST', 'OPTIONS'])
+@cross_origin()  # Add this decorator to handle CORS for this specific route
+def mpesa_callback():
+    if request.method == 'OPTIONS':
+        # Handle preflight request
+        response = jsonify({'success': True})
+        return response
+        
+    try:
+        # Import models here to avoid circular imports
+        from models.models import Order, Invoice
+        
+        data = request.get_json()
+        logger.info(f"M-PESA callback received: {data}")
+        
+        callback_data = data.get('Body', {}).get('stkCallback', {})
+        result_code = callback_data.get('ResultCode')
+        merchant_request_id = callback_data.get('MerchantRequestID')
+        checkout_request_id = callback_data.get('CheckoutRequestID')
+        
+        # Find the order associated with this transaction
+        # In a real app, you'd store the checkout_request_id with the order
+        # For this example, we'll just update the most recent pending order
+        order = Order.query.filter_by(status='pending').order_by(Order.created_at.desc()).first()
+        
+        if order:
+            if result_code == 0:
+                # Payment successful
+                order.status = 'paid'
+                db.session.commit()
+                logger.info(f"M-PESA payment successful for order ID: {order.id}")
+                
+                # You could also create an invoice here
+                
+                return jsonify({
+                    "ResultCode": 0,
+                    "ResultDesc": "Accepted"
+                })
+            else:
+                # Payment failed
+                order.status = 'failed'
+                db.session.commit()
+                logger.info(f"M-PESA payment failed for order ID: {order.id}")
+        
+        return jsonify({
+            "ResultCode": 0,
+            "ResultDesc": "Accepted"
+        })
+    except Exception as e:
+        logger.error(f"Error processing M-PESA callback: {str(e)}")
+        logger.error(traceback.format_exc())
+        return jsonify({
+            "ResultCode": 1,
+            "ResultDesc": "Rejected"
+        }), 500

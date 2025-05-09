@@ -43,7 +43,8 @@ CORS(app,
          "http://localhost:5173", 
          "https://fashion-design-fronted.vercel.app",
          "https://fashion-design-fronted-git-main-ythaka1s-projects.vercel.app",
-         "https://fashion-design-frontend-three.vercel.app",  # Add your new frontend domain
+         "https://fashion-design-frontend-three.vercel.app",
+         "https://fashion-designed-frontend.vercel.app",  # Added your new frontend domain
          # For maximum compatibility, you can use a wildcard for all subdomains
          "https://*.vercel.app"
      ]}},
@@ -62,10 +63,17 @@ app.register_blueprint(auth_bp, url_prefix='/api/auth')
 app.register_blueprint(mpesa_bp, url_prefix='/mpesa/api') 
 
 
+# Improved CORS preflight handling for OPTIONS requests
 @app.route('/', defaults={'path': ''}, methods=['OPTIONS'])
 @app.route('/<path:path>', methods=['OPTIONS'])
 def options_handler(path):
-    return jsonify(success=True)
+    response = jsonify(success=True)
+    # Explicitly add CORS headers for OPTIONS requests
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 
 
 @app.route('/api/test', methods=['GET'])
