@@ -1,4 +1,4 @@
-#!/home/student/development/phase5/fashion-design-backend/venv/bin/python3
+#!/home/hamdi/Development/git/fashion-design-backend/venv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys
